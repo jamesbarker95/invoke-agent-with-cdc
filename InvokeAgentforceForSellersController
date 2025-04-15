@@ -1,0 +1,16 @@
+public with sharing class InvokeAgentforceForSellersController {
+    @AuraEnabled
+    public static String runInvokeAgent(String recordId, String context) {
+        // Prepare input variables for the flow
+        Map<String, Object> inputs = new Map<String, Object>{
+            'RecordId' => recordId,
+            'Context'  => context
+        };
+        // Instantiate and start the flow interview (ensure the API name matches your flow)
+        Flow.Interview invokeAgentFlow = new Flow.Interview.Invoke_Agentforce_For_Sellers(inputs);
+        invokeAgentFlow.start();
+        
+        // Retrieve the output variable from the flow
+        return (String) invokeAgentFlow.getVariableValue('Response');
+    }
+}
