@@ -1,0 +1,86 @@
+<template>
+    <template if:true={isVisible}>
+        <div class="chat-container">
+            <!-- HEADER -->
+            <div class="chat-header">
+                <img src={agentIconUrl} class="agent-icon" alt="Agentforce Icon" onclick={toggleChatInput}/>
+                <h2 class="header-title">Agentforce For Sellers</h2>
+            </div>
+
+            <!-- BODY (spinner overlay, messages, input) -->
+            <div class="chat-body">
+                <template if:true={isLoading}>
+                    <div class="local-spinner-overlay">
+                        <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+                    </div>
+                </template>
+
+                <!-- MESSAGES -->
+                <div class="chat-messages">
+                    <ul class="slds-list_vertical slds-has-dividers_bottom slds-m-vertical_small">
+                        <template for:each={messages} for:item="msg">
+                            <li key={msg.id} class="slds-m-vertical_small">
+
+                                <!-- INBOUND -->
+                                <template if:true={msg.isInbound}>
+                                    <div class="slds-chat-listitem slds-chat-listitem_inbound">
+                                        <div class="slds-chat-message">
+                                            <div class="slds-chat-message__body">
+
+                                                <!-- The inbound bubble, lwc:dom="manual" -->
+                                                <div 
+                                                    class="slds-chat-message__text slds-chat-message__text_inbound" 
+                                                    lwc:dom="manual" 
+                                                    data-msgid={msg.id}>
+                                                    <!-- We'll inject msg.html in renderedCallback() -->
+                                                </div>
+
+                                                <div class="slds-chat-message__meta" aria-label={msg.ariaLabel}>
+                                                    {msg.sender} • {msg.time}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <!-- OUTBOUND -->
+                                <template if:false={msg.isInbound}>
+                                    <div class="slds-chat-listitem slds-chat-listitem_outbound" style="text-align: right;">
+                                        <div class="slds-chat-message" style="display: inline-block;">
+                                            <div class="slds-chat-message__body">
+                                                <div class="slds-chat-message__text slds-chat-message__text_outbound">
+                                                    <span>{msg.text}</span>
+                                                </div>
+                                                <div class="slds-chat-message__meta" aria-label={msg.ariaLabel}>
+                                                    {msg.sender} • {msg.time}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+
+                <!-- CHAT INPUT -->
+                <template if:true={isInputVisible}>
+                    <div class="chat-input">
+                        <lightning-textarea
+                            label="Type your message"
+                            value={newMessage}
+                            onchange={handleNewMessageChange}
+                            onkeydown={handleKeyDown}
+                        ></lightning-textarea>
+                        <lightning-button
+                            variant="brand"
+                            label="Send"
+                            onclick={handleSend}
+                        ></lightning-button>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </template>
+</template>
