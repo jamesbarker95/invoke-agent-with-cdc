@@ -1,0 +1,38 @@
+public with sharing class QuoteTaskCaseController {
+
+    @AuraEnabled(cacheable=true)
+    public static List<Quote> getQuotesByIds(List<Id> quoteIds) {
+        if (quoteIds == null || quoteIds.isEmpty()) {
+            return new List<Quote>();
+        }
+        return [
+            SELECT Id, QuoteNumber
+            FROM Quote
+            WHERE Id IN :quoteIds
+        ];
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<Task> getTasksByIds(List<Id> taskIds) {
+        if (taskIds == null || taskIds.isEmpty()) {
+            return new List<Task>();
+        }
+        return [
+            SELECT Id, Subject
+            FROM Task
+            WHERE Id IN :taskIds
+        ];
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<Case> getCasesByIds(List<Id> caseIds) {
+        if (caseIds == null || caseIds.isEmpty()) {
+            return new List<Case>();
+        }
+        return [
+            SELECT Id, CaseNumber, Subject
+            FROM Case
+            WHERE Id IN :caseIds
+        ];
+    }
+}
